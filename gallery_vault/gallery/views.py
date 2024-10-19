@@ -1,51 +1,52 @@
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
-from django.http import JsonResponse
-import json
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
+
 from .models import Photo
-from django.core.files.storage import default_storage
-from django.views.decorators.http import require_http_methods
-from django.views.decorators.csrf import csrf_exempt
+from .serializers import PhotoSerializer
 
-@csrf_exempt
-def register(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        username = data['username']
-        password = data['password']
-        if User.objects.filter(username=username).exists():
-            return JsonResponse({'error': 'User already exists'}, status=400)
-        user = User.objects.create_user(username=username, password=password)
-        return JsonResponse({'message': 'User registered successfully'}, status=201)
+# List all photos of the authenticated user and upload a new photo
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def user_gallery(request):
+    if request.method == 'GET':
+        photos = Photo.objects.filter(user=request.user)
+        serializer = PhotoSerializer(photos, many=True)
+        return Response(serializer.data)
 
-@csrf_exempt
-def user_login(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        username = data['username']
-        password = data['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return JsonResponse({'message': 'Login successful'}, status=200)
-        return JsonResponse({'error': 'Invalid credentials'}, status=400)
+    elif request.method == 'POST':
+        serializer = PhotoSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def user_logout(request):
-    logout(request)
-    return JsonResponse({'message': 'Logged out'}, status=200)
+# Retrieve, update, or delete a specific photo
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def photo_detail(request, pk):
+    photo = get_object_or_404(Photo, pk=pk, user=request.user)
 
-@csrf_exempt
-@require_http_methods(['POST'])
-def upload_photo(request):
-    if request.user.is_authenticated:
-        image = request.FILES['image']
-        photo = Photo(user=request.user, image=image)
-        photo.save()
-        return JsonResponse({'message': 'Photo uploaded'}, status=201)
-    return JsonResponse({'error': 'Unauthorized'}, status=401)
+    if request.method == 'GET':
+        serializer = PhotoSerializer(photo)
+        return Response(serializer.data)
 
-def user_photos(request):
-    if request.user.is_authenticated:
-        photos = Photo.objects.filter(user=request.user).values('image', 'uploaded_at')
-        return JsonResponse(list(photos), safe=False)
-    return JsonResponse({'error': 'Unauthorized'}, status=401)
+    elif request.method == 'PUT':
+        serializer = PhotoSerializer(photo, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        photo.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+from django.http import JsonResponse
+
+def get_token(request):
+    # Example token generation logic or response
+    token = "your-generated-token-here"
+    return JsonResponse({"token": token})

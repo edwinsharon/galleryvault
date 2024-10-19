@@ -1,17 +1,8 @@
 from rest_framework import serializers
-from .models import Image
-from django.contrib.auth.models import User
+from .models import Photo
 
-class ImageSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
-
+class PhotoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Image
-        fields = ['id', 'owner', 'title', 'image_file', 'uploaded_at']
-
-class UserSerializer(serializers.ModelSerializer):
-    images = ImageSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'images']
+        model = Photo
+        fields = ['id', 'title', 'description', 'image', 'uploaded_at']
+        read_only_fields = ['uploaded_at', 'id']

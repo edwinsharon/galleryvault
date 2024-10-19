@@ -39,8 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'corsheaders',
+    'rest_framework.authtoken',
     'gallery',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -59,13 +60,12 @@ CORS_ALLOWED_ORIGINS = [
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
-
 
 ROOT_URLCONF = 'gallery_vault.urls'
 
@@ -87,6 +87,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'gallery_vault.wsgi.application'
 
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
