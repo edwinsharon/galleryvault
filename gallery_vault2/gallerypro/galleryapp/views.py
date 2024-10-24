@@ -57,6 +57,13 @@ def addimage(request):
             return redirect("index")
     return render(request, "newpost.html")
 
+def view_image(request,pk):
+    feeds = Gallery.objects.filter(pk=pk)
+    return render(request,"image.html",{"feeds":feeds})
+    
+    
+
+
 def newpost(request):
     if request.method == 'POST':
         feedimage = request.FILES.get('feedimage')
@@ -69,3 +76,9 @@ def newpost(request):
 def logoutuser(request):
     logout(request)
     return redirect('usersignin')  # Redirect to sign-in page after logout
+
+def delete_image(request,pk):
+    feeds = Gallery.objects.filter(pk=pk)
+    feeds.delete()
+    return redirect("index")
+    
