@@ -10,16 +10,16 @@
     font-weight: 400;
     font-style: normal;
     position: fixed;
-    margin-top: 0;
+    margin-left: 0;
    
 
 }
-.main{
+/* .main{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     
-}
+} */
 .mainnav{
     width: 20%;
     background-color: black;
@@ -47,8 +47,9 @@ display: flex;
     width: 100%;
     overflow: scroll;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     margin-top: 10%;
+
     
 }
 .feed{
@@ -56,13 +57,13 @@ display: flex;
     width: 200px;
     background-color: darkgrey;
     margin-top: 25px;
-    margin-left: 40%;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     border-radius: 2%;
     object-fit: contain;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
+    flex-wrap: wrap;
 }
 .images{
     height: 200px;
