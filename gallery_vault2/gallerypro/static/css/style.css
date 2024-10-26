@@ -14,12 +14,14 @@
    
 
 }
-/* .main{
+.main{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    margin-top: 300px;
+    justify-content: space-evenly;
     
-} */
+}
 .mainnav{
     width: 20%;
     background-color: black;
@@ -65,8 +67,6 @@ display: flex;
     align-items: center;
     flex-wrap: wrap;
 }
-.images{
-    height: 200px;
-    width: 200px;
-    object-fit: contain;
+.hijk:hover{
+    transform: scale(2,2);
 }

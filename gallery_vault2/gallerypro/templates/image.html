@@ -26,7 +26,7 @@
     <div class="master">
         {% if feeds %}
             {% for i in feeds %}
-                <img src="{{ i.feedimage.url }}" alt="Gallery image" loading="lazy">
+                <img src="{{ i.feedimage.url }}" alt="Gallery image" loading="lazy" style="margin-top: 100px;">
                 <div>
                     <a href="{% url 'index' %}"><button style="border: none; background-color:darkblue; border-radius:5px; color:white">Back to Gallery</button></a>
                 </div>

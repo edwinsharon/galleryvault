@@ -6,7 +6,7 @@ from .models import Gallery
 
 def index(request):
     if request.user.is_authenticated:
-        feeds = Gallery.objects.filter(User=request.user)
+        feeds = Gallery.objects.filter(User=request.user).order_by('-id')
         return render(request, "index.html", {"feeds": feeds})
     return redirect("usersignin")
 
